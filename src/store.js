@@ -18,9 +18,10 @@ action = {
 export default function storeReducer(store, action = {}) {    // the reducer function
   switch(action.type){    // action {type: "SOMETHING like add_task", payload: "values like the-specific-task"}
       case 'SET_CONTACTS':
-        const newStore = (...store) => 
-        newStore.contacts = action.payload;
-        return newStore;
+        return {
+          ...store,
+          contacts: action.payload
+        };
     default:
       throw Error('Unknown action.');
   }    
