@@ -1,9 +1,11 @@
-import { useState } from "react";
-import { PostContact, GetContacts } from "../hooks/Actions.jsx";
+import { useEffect, useState } from "react";
+import { PutContact, GetContacts } from "../hooks/Actions.jsx";
 import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
 import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
-export const AddContact = () => {
+export const EditContact = () => {
+  const {id} = useParams();
   const {store, dispatch} = useGlobalReducer();
   const navigate = useNavigate();
   const [name, setName] = useState("");
@@ -11,7 +13,19 @@ export const AddContact = () => {
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
 
-  const HandlePost = async () => {
+  useEffect(() => { 
+    if (id) {
+      const contact = store.contacts.find(contact => contact.id === parseInt(id));
+      if (contact) {
+        setName(contact.name);
+        setEmail(contact.email);
+        setPhone(contact.phone);
+        setAddress(contact.address);
+      }
+    }
+  } , []);
+
+  const HandlePut = async () => {
     const contact = {
       name: name,
       email: email,
@@ -19,7 +33,7 @@ export const AddContact = () => {
       address: address,
     };
     try {
-      await PostContact(contact);
+      await PutContact(store, id, contact);
       // Optionally, you can reset the form fields after successful submission
       setName("");
       setEmail("");
@@ -37,7 +51,7 @@ export const AddContact = () => {
     //onChange with useState
     <div className="form">
       <div className="form-title d-flex justify-content-center mt-3">
-        <h1>Add New Contact</h1>
+        <h1>Edit New Contact</h1>
       </div>
       <div className="form-body ms-5 me-5">
         <div className="mb-3">
@@ -94,7 +108,7 @@ export const AddContact = () => {
         </div>
       </div>
       <div className="form-footer d-flex justify-content-center">
-        <button onClick={() => HandlePost()} className="btn btn-primary">
+        <button onClick={() => HandlePut()} className="btn btn-primary">
           save contact
         </button>
       </div>
