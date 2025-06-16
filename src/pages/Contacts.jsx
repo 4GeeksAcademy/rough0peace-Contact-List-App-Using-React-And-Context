@@ -15,10 +15,10 @@ export const Contacts = () => {
   }, []);
 
   return (
-    <ul>
+    <ul className="m-auto p-5">
       {store.contacts?.map((contact) => {
         return (
-          <li key={contact.id}>
+          <li key={contact.id} style={{listStyle: "none"}}>
             <ContactCard
               name={contact.name}
               email={contact.email}
